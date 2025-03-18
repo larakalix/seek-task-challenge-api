@@ -2,7 +2,7 @@ fastapi
 uvicorn[standard]
 mangum
 motor
-python-jose[cryptography]
+python-jose[cryptography]==3.3.0
 python-dotenv
 python-multipart
 passlib[bcrypt]==1.7.4

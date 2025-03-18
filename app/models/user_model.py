@@ -30,3 +30,10 @@ class UserLogin(UserBase):
 
 class User(UserBase):
     id: str
+
+def user_serializer(user) -> dict:
+    return {
+        "id": str(user["_id"]),
+        "username": user["username"],
+        "email": user["email"]
+    }

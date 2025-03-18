@@ -9,12 +9,15 @@ from app.routes.tasks.create_task import router as create_task_router
 from app.routes.tasks.update_task import router as update_task_router
 from app.routes.tasks.delete_task import router as delete_task_router
 
-
 app = FastAPI()
 
 @app.get("/")
 def root():
     return { "message": "Welcome to the API" }
+
+@app.get("/api/test")
+async def api_test():
+    return {"status": "This endpoint works"}
 
 # # Auth endpoints.
 app.include_router(register_router, prefix="/api/auth")

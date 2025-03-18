@@ -1,0 +1,78 @@
+{
+  "C:\\Users\\uki\\Documents\\Git\\fastapi-serverless-api\\serverless.yml": {
+    "versionFramework": "4.9.0",
+    "servicePath": "C:\\Users\\uki\\Documents\\Git\\fastapi-serverless-api\\serverless.yml",
+    "serviceConfigFileName": "serverless.yml",
+    "service": {
+      "service": "fastapi-serverless-api",
+      "provider": {
+        "name": "aws",
+        "runtime": "python3.11",
+        "stage": "dev",
+        "region": "us-east-1",
+        "environment": {
+          "MONGO_URL": "mongodb+srv://ukikalix:NFkIV3AWTVytQQhU@task-db.wbxri.mongodb.net/?retryWrites=true&w=majority&appName=task-db"
+        },
+        "versionFunctions": true
+      },
+      "functions": {
+        "api": {
+          "handler": "app.main.handler",
+          "events": [
+            {
+              "httpApi": "*"
+            }
+          ]
+        }
+      },
+      "plugins": [
+        "serverless-python-requirements"
+      ],
+      "package": {
+        "patterns": [
+          "!node_modules/**",
+          "!venv/**"
+        ]
+      }
+    },
+    "provider": {
+      "name": "aws",
+      "runtime": "python3.11",
+      "stage": "dev",
+      "region": "us-east-1",
+      "environment": {
+        "MONGO_URL": "mongodb+srv://ukikalix:NFkIV3AWTVytQQhU@task-db.wbxri.mongodb.net/?retryWrites=true&w=majority&appName=task-db"
+      },
+      "versionFunctions": true
+    },
+    "dashboard": {
+      "isEnabledForService": false,
+      "requiredAuthentication": true,
+      "orgFeaturesInUse": null,
+      "orgObservabilityIntegrations": null,
+      "serviceAppId": null,
+      "serviceProvider": null,
+      "instanceParameters": null
+    },
+    "error": {
+      "message": "Serverless plugin \"serverless-python-requirements\" not found. Make sure it's installed and listed in the \"plugins\" section of your serverless config file. Use the --debug flag to learn more.",
+      "stack": "ServerlessError2: Serverless plugin \"serverless-python-requirements\" not found. Make sure it's installed and listed in the \"plugins\" section of your serverless config file. Use the --debug flag to learn more.\n    at PluginManager.resolveServicePlugins (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:809:2914)\n    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)\n    at async PluginManager.loadAllPlugins (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:809:1292)\n    at async Serverless.init (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:816:9840)\n    at async runFramework (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:843:837)\n    at async TraditionalRunner.run (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:839:28308)\n    at async route (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:877:2779)\n    at async Object.run (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:878:3661)\n    at async run2 (file:///C:/Users/uki/.serverless/releases/4.9.0/package/dist/sf-core.js:878:4814)",
+      "code": "PLUGIN_NOT_FOUND"
+    },
+    "serviceRawFile": "service: fastapi-serverless-api\r\n\r\nprovider:\r\n  name: aws\r\n  runtime: python3.11\r\n  stage: dev\r\n  region: us-east-1\r\n  environment:\r\n    MONGO_URL: ${env:MONGO_URL}\r\n\r\nfunctions:\r\n  api:\r\n    handler: app.main.handler\r\n    events:\r\n      - httpApi: \"*\"\r\n\r\nplugins:\r\n  - serverless-python-requirements\r\n\r\npackage:\r\n  patterns:\r\n    - \"!node_modules/**\"\r\n    - \"!venv/**\"",
+    "command": [
+      "deploy"
+    ],
+    "options": {},
+    "orgId": "6af1d856-e28c-445e-8338-054daf0419c0",
+    "orgName": "ukikalix",
+    "userId": "Jdh36V0LKlt5dKpN72",
+    "userName": "ukikalix",
+    "serviceProviderAwsAccountId": "976105904588",
+    "serviceProviderAwsCfStackId": null,
+    "serviceProviderAwsCfStackCreated": null,
+    "serviceProviderAwsCfStackUpdated": null,
+    "serviceProviderAwsCfStackStatus": null,
+    "serviceProviderAwsCfStackOutputs": null
+  }
+}

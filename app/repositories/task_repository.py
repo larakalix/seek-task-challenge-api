@@ -18,7 +18,7 @@ class TaskRepository:
                  "as": "user_info"
             }},
             {"$unwind": "$user_info"},
-            {"$addFields": {"user_name": "$user_info.email"}},
+            {"$addFields": {"user_name": "$user_info.name"}},
             {"$project": {"user_info": 0}}
         ]
         cursor = self.collection.aggregate(pipeline)

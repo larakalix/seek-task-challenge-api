@@ -5,6 +5,7 @@ from enum import Enum
 # User Models
 # --------------------
 class UserBase(BaseModel):
+    name: str
     email: EmailStr
 
 class UserCreate(UserBase):

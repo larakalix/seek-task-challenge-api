@@ -1,17 +1,18 @@
-# Use an official AWS Lambda base image for Python 3.9
-FROM public.ecr.aws/lambda/python:3.9
+# Use an official Python runtime as a parent image
+FROM python:3.10-slim
 
-# (Optional) Download the AWS Lambda Runtime Interface Emulator (RIE)
-# for local testing if needed.
-# ADD https://github.com/aws/aws-lambda-runtime-interface-emulator/releases/latest/download/aws-lambda-rie /aws-lambda-rie
-# RUN chmod +x /aws-lambda-rie
+# Set the working directory in the container
+WORKDIR /app
 
-# Copy requirements and install dependencies
+# Copy the requirements file and install dependencies
 COPY requirements.txt .
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy your application code
+# Copy the application code
 COPY . .
 
-# Set the CMD to your Lambda handler. The format is "module.handler"
-CMD ["app.main.handler"]
+# Expose port 80 for the app
+EXPOSE 80
+
+# Command to run the application with uvicorn
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

@@ -12,6 +12,10 @@ from app.routes.tasks.delete_task import router as delete_task_router
 
 app = FastAPI()
 
+@app.get("/")
+def root():
+    return { "message": "Welcome to the API" }
+
 # Auth endpoints.
 app.include_router(register_router, prefix="/api/auth")
 app.include_router(login_router, prefix="/api/auth")

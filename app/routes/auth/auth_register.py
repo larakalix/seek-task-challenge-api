@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException, status
-from app.models import User, UserCreate
+from app.models.user_model import User, UserCreate
 from app.database import db
 from app.auth import get_password_hash
 
@@ -17,10 +17,10 @@ async def register(user_create: UserCreate):
     user_doc = {
         "name": user_create.name,
         "email": user_create.email,
-        "hashed_password": hashed_password,
+        "password": hashed_password,
     }
     result = await db.users.insert_one(user_doc)
     new_user = await db.users.find_one({"_id": result.inserted_id})
     new_user["id"] = str(new_user["_id"])
-    new_user.pop("hashed_password", None)
+    new_user.pop("password", None)
     return User(**new_user)

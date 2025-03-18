@@ -1,26 +1,6 @@
-from pydantic import BaseModel, EmailStr, field_validator
+from pydantic import BaseModel, field_validator
 from enum import Enum
 
-# --------------------
-# User Models
-# --------------------
-class UserBase(BaseModel):
-    name: str
-    email: EmailStr
-
-class UserCreate(UserBase):
-    password: str
-
-class UserLogin(BaseModel):
-    email: EmailStr
-    password: str
-
-class User(UserBase):
-    id: str
-
-# --------------------
-# Task Models
-# --------------------
 class TaskStatus(str, Enum):
     Todo = "to-do"
     InProgress = "in-progress"
@@ -57,3 +37,5 @@ class TaskUpdate(TaskBase):
 
 class Task(TaskUpdate):
     id: str
+    user_id: str
+    user_name: str

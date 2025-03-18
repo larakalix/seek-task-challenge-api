@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, status
 from datetime import timedelta
-from app.models import UserLogin
+from app.models.user_model import UserLogin
 from app.database import db
 from app.auth import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
@@ -15,8 +15,23 @@ async def login(user: UserLogin):
             detail="Incorrect email or password",
             headers={"WWW-Authenticate": "Bearer"},
         )
+    
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(
-        data={"sub": user_doc["email"]}, expires_delta=access_token_expires
+    
+    token_data = {
+        "sub": user_doc["email"],
+        "id": str(user_doc["_id"]),
+        "email": user_doc["email"],
+        "name": user_doc.get("name", user_doc["email"])
+    }
+    
+    token = create_access_token(
+        data=token_data, expires_delta=access_token_expires
     )
-    return {"access_token": access_token, "token_type": "bearer"}
+    
+    return {
+        "id": str(user_doc["_id"]),
+        "name": user_doc.get("name", user_doc["email"]),
+        "email": user_doc["email"],
+        "token": token
+    }

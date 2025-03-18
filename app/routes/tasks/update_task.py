@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
 from app.auth import verify_token
-from app.models import Task, TaskUpdate
+from app.models.task_model import Task, TaskUpdate
 from app.repositories.task_repository import TaskRepository
 from app.dependencies import get_task_repository
 

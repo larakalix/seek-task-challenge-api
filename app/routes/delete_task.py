@@ -1,16 +1,22 @@
 from fastapi import APIRouter, HTTPException
 from app.models import Task, TaskStatus
-from app.data import tasks
+from app.database import db
+from bson import ObjectId
 
 router = APIRouter()
 
 @router.delete("/tasks/{task_id}", response_model=Task)
-def soft_delete_task(task_id: str):
-    for index, task in enumerate(tasks):
-        if task.id == task_id:
-            if task.status == TaskStatus.Deleted:
-                raise HTTPException(status_code=404, detail="Task not found")
-            deleted_task = task.copy(update={"status": TaskStatus.Deleted})
-            tasks[index] = deleted_task
-            return deleted_task
-    raise HTTPException(status_code=404, detail="Task not found")
+async def soft_delete_task(task_id: str):
+    try:
+        obj_id = ObjectId(task_id)
+    except Exception:
+        raise HTTPException(status_code=400, detail="Invalid task ID format")
+    
+    existing_task = await db.tasks.find_one({"_id": obj_id})
+    if existing_task is None or existing_task.get("status") == TaskStatus.Deleted:
+        raise HTTPException(status_code=404, detail="Task not found")
+    
+    await db.tasks.update_one({"_id": obj_id}, {"$set": {"status": TaskStatus.Deleted}})
+    deleted_task = await db.tasks.find_one({"_id": obj_id})
+    deleted_task["id"] = str(deleted_task["_id"])
+    return Task(**deleted_task)

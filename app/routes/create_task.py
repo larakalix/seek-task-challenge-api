@@ -1,18 +1,18 @@
 from fastapi import APIRouter
 from uuid import uuid4
 from app.models import Task, TaskCreate, TaskStatus
-from app.data import tasks
+from app.database import db
 
 router = APIRouter()
 
 @router.post("/tasks", response_model=Task)
-def create_task(task_create: TaskCreate):
-    task_id = str(uuid4())
-    new_task = Task(
-        id=task_id,
-        title=task_create.title,
-        description=task_create.description,
-        status=TaskStatus.Todo,
-    )
-    tasks.append(new_task)
-    return new_task
+async def create_task(task_create: TaskCreate):
+    new_task = {
+        "title": task_create.title,
+        "description": task_create.description,
+        "status": TaskStatus.Todo,
+    }
+    result = await db.tasks.insert_one(new_task)
+    created_task = await db.tasks.find_one({"_id": result.inserted_id})
+    created_task["id"] = str(created_task["_id"])
+    return Task(**created_task)

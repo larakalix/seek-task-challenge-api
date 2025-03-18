@@ -1,15 +1,12 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from typing import List
-from app.models import Task, TaskStatus
-from app.database import db
+from app.models import Task
+from app.repositories.task_repository import TaskRepository
+from app.dependencies import get_task_repository
 
 router = APIRouter()
 
 @router.get("/tasks", response_model=List[Task])
-async def get_tasks():
-    cursor = db.tasks.find({"status": {"$ne": TaskStatus.Deleted}})
-    tasks_list = []
-    async for document in cursor:
-        document["id"] = str(document["_id"])
-        tasks_list.append(Task(**document))
-    return tasks_list
+async def get_tasks(repo: TaskRepository = Depends(get_task_repository)):
+    tasks_list = await repo.get_tasks()
+    return [Task(**task) for task in tasks_list]

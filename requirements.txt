@@ -3,3 +3,4 @@ uvicorn
 motor
 pyjwt
 python-multipart
+passlib[bcrypt]

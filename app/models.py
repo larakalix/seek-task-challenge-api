@@ -1,6 +1,25 @@
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, EmailStr, field_validator
 from enum import Enum
 
+# --------------------
+# User Models
+# --------------------
+class UserBase(BaseModel):
+    email: EmailStr
+
+class UserCreate(UserBase):
+    password: str
+
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+
+class User(UserBase):
+    id: str
+
+# --------------------
+# Task Models
+# --------------------
 class TaskStatus(str, Enum):
     Todo = "to-do"
     InProgress = "in-progress"
@@ -12,38 +31,28 @@ class TaskBase(BaseModel):
     description: str
 
     @field_validator("title")
-    def check_title(cls, v):
-        if v is None or not v.strip():
+    def validate_title(cls, value: str) -> str:
+        if value is None or not value.strip():
             raise ValueError("Title must not be empty")
-        return v
+        return value
 
     @field_validator("description")
-    def check_description(cls, v):
-        if v is None or not v.strip():
+    def validate_description(cls, value: str) -> str:
+        if value is None or not value.strip():
             raise ValueError("Description must not be empty")
-        return v
+        return value
 
 class TaskCreate(TaskBase):
-    # Inherits the validations from TaskBase
     pass
 
-class TaskUpdate(BaseModel):
-    title: str
-    description: str
+class TaskUpdate(TaskBase):
     status: TaskStatus
 
-    @field_validator("title")
-    def check_title(cls, v):
-        if v is None or not v.strip():
-            raise ValueError("Title must not be empty")
-        return v
+    @field_validator("status")
+    def validate_status(cls, value: TaskStatus) -> TaskStatus:
+        if value is None:
+            raise ValueError("Status must not be null")
+        return value
 
-    @field_validator("description")
-    def check_description(cls, v):
-        if v is None or not v.strip():
-            raise ValueError("Description must not be empty")
-        return v
-
-class Task(TaskBase):
+class Task(TaskUpdate):
     id: str
-    status: TaskStatus

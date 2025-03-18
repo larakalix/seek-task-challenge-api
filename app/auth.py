@@ -33,7 +33,6 @@ def create_access_token(data: dict, expires_delta: timedelta = None):
 def verify_token(token: str = Depends(oauth2_scheme)):
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        # Optionally, you can extract user info from payload here.
         return payload
     except PyJWTError:
         raise HTTPException(

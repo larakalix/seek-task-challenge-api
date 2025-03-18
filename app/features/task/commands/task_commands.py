@@ -7,12 +7,13 @@ class TaskCommandHandler:
     def __init__(self, db: AsyncIOMotorDatabase):
         self.collection = db.tasks
 
-    async def create_task(self, task_create: TaskCreate, user_id: str) -> dict:        
+    async def create_task(self, task_create: TaskCreate, user_id: str, user_name: str) -> dict:        
         new_task = {
             "title": task_create.title,
             "description": task_create.description,
             "status": TaskStatus.Todo,
-            "user_id": ObjectId(user_id)
+            "user_id": ObjectId(user_id),
+            "user_name": user_name
         }
         result = await self.collection.insert_one(new_task)
         created_task = await self.collection.find_one({"_id": result.inserted_id})

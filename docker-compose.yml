@@ -1,24 +1,9 @@
-version: "3.8"
+version: "3.9"
 
 services:
   api:
     build: .
     ports:
-      - "8000:80"
-    depends_on:
-      - mongo
+      - "8000:8000"
     environment:
-      # Set an environment variable for your FastAPI app to connect to MongoDB
-      - MONGO_URI=mongodb://mongo:27017/tasksdb
-
-  mongo:
-    image: mongo:latest
-    container_name: mongodb
-    restart: always
-    ports:
-      - "27017:27017"
-    volumes:
-      - mongo_data:/data/db
-
-volumes:
-  mongo_data: 
+      - MONGO_URL=mongodb+srv://ukikalix:NFkIV3AWTVytQQhU@task-db.wbxri.mongodb.net/?retryWrites=true&w=majority&appName=task-db

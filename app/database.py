@@ -1,6 +1,10 @@
 import os
 from motor.motor_asyncio import AsyncIOMotorClient
+from dotenv import load_dotenv
 
-MONGO_URI = os.environ.get("MONGO_URI", "mongodb://localhost:27017/tasksdb")
-client = AsyncIOMotorClient(MONGO_URI)
-db = client.get_default_database()
+load_dotenv()
+
+client = AsyncIOMotorClient(os.getenv("MONGO_URL"))
+db = client.tasks_db
+
+task_collection = db.tasks

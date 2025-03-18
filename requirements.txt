@@ -1,8 +1,10 @@
 fastapi
+uvicorn[standard]
 mangum
-uvicorn
 motor
 pyjwt
+python-dotenv
 python-multipart
 passlib[bcrypt]
 pydantic[email]
+pymongo

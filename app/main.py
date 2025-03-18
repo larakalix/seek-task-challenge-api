@@ -16,14 +16,14 @@ app = FastAPI()
 def root():
     return { "message": "Welcome to the API" }
 
-# Auth endpoints.
+# # Auth endpoints.
 app.include_router(register_router, prefix="/api/auth")
 app.include_router(login_router, prefix="/api/auth")
 
-# Public endpoint.
+# # Public endpoint.
 app.include_router(get_tasks_router, prefix="/api")
 
-# Protected endpoints (all will require a valid token).
+# # Protected endpoints (all will require a valid token).
 app.include_router(create_task_router, prefix="/api")
 app.include_router(update_task_router, prefix="/api")
 app.include_router(delete_task_router, prefix="/api")

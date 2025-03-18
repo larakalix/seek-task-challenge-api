@@ -1,0 +1,23 @@
+service: fastapi-serverless-api
+
+provider:
+  name: aws
+  runtime: python3.11
+  stage: dev
+  region: us-east-1
+  environment:
+    MONGO_URL: ${env:MONGO_URL}
+
+functions:
+  api:
+    handler: app.main.handler
+    events:
+      - httpApi: "*"
+
+plugins:
+  - serverless-python-requirements
+
+package:
+  patterns:
+    - "!node_modules/**"
+    - "!venv/**"

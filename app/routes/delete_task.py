@@ -1,9 +1,10 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Depends
+from app.auth import verify_token
 from app.models import Task, TaskStatus
 from app.database import db
 from bson import ObjectId
 
-router = APIRouter()
+router = APIRouter(dependencies=[Depends(verify_token)])
 
 @router.delete("/tasks/{task_id}", response_model=Task)
 async def soft_delete_task(task_id: str):

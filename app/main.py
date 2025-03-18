@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from mangum import Mangum
 
 from app.routes.auth.auth_register import router as register_router
 from app.routes.auth.auth_login import router as login_router
@@ -22,3 +23,5 @@ app.include_router(get_tasks_router, prefix="/api")
 app.include_router(create_task_router, prefix="/api")
 app.include_router(update_task_router, prefix="/api")
 app.include_router(delete_task_router, prefix="/api")
+
+handler = Mangum(app)

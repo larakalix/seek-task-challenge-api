@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, status
 from datetime import timedelta
 from app.models.user_model import User, UserCreate
-from app.database import db
-from app.auth import get_password_hash, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.database import user_collection
+from app.auth_helpers import get_password_hash, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
 @router.post("/register")
 async def register(user_create: UserCreate):
-    existing_user = await db.users.find_one({"email": user_create.email})
+    existing_user = await user_collection.find_one({"email": user_create.email})
     if existing_user:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -20,8 +20,8 @@ async def register(user_create: UserCreate):
         "email": user_create.email,
         "hashed_password": hashed_password,
     }
-    result = await db.users.insert_one(user_doc)
-    new_user = await db.users.find_one({"_id": result.inserted_id})
+    result = await user_collection.insert_one(user_doc)
+    new_user = await user_collection.find_one({"_id": result.inserted_id})
     
     new_user["id"] = str(new_user["_id"])
     new_user.pop("hashed_password", None)

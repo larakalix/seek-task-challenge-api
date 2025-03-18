@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, status
 from datetime import timedelta
 from app.models.user_model import UserLogin
-from app.database import db
-from app.auth import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
+from app.database import user_collection
+from app.auth_helpers import verify_password, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES
 
 router = APIRouter()
 
 @router.post("/login")
 async def login(user: UserLogin):
-    user_doc = await db.users.find_one({"email": user.email})
+    user_doc = await user_collection.find_one({"email": user.email})
     if not user_doc or not verify_password(user.password, user_doc["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

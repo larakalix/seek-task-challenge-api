@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from app.models.task_model import Task, TaskUpdate
 from app.dependencies import get_task_command_handler
-from app.auth import verify_token
+from app.auth_helpers import verify_token
 
 router = APIRouter(dependencies=[Depends(verify_token)])
 

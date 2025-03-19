@@ -1,13 +1,13 @@
 import os
 from passlib.context import CryptContext
 from datetime import datetime, timedelta
-from jose import JWTError, jwt
-from fastapi import Depends, HTTPException, status
+from jose import jwt
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import OAuth2PasswordBearer
 from pydantic import BaseModel
 
 # For simplicity, we're using a hard-coded secret and algorithm.
-SECRET_KEY = "cm8dv2jq8000008jpd1ulg56y"
+SECRET_KEY = "83daa0256a2289b0fb23693bf1f6034d44396675749244721a2b20e896e11662"
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -36,9 +36,35 @@ async def verify_token(token: str = Depends(oauth2_scheme)) -> TokenData:
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
         token_data = TokenData(**payload)
         return token_data
-    except JWTError:
+    except Exception:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
+        
+async def get_session_from_request(request: Request) -> str:
+    auth_header = request.headers.get("Authorization")
+
+    if not auth_header or not auth_header.startswith("Bearer "):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization header missing or invalid"
+        )
+
+    token = auth_header.split("Bearer ")[1]
+
+    token_payload: TokenData = await verify_token(token)
+    user_email = token_payload.email
+    user_id = token_payload.user_id
+
+    if not user_email:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid token payload"
+        )
+
+    return {
+        "user_email": user_email,
+        "user_id": user_id
+    }

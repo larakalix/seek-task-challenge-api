@@ -21,14 +21,18 @@ class TaskCommandHandler:
         created_task["user_id"] = str(created_task["user_id"])
         return created_task
 
-    async def update_task(self, task_id: str, task_update: TaskUpdate) -> dict:
+    async def update_task(self, task_id: str, task_update: TaskUpdate, user_id: str) -> dict:
         try:
             obj_id = ObjectId(task_id)
         except Exception:
             raise HTTPException(status_code=400, detail="Invalid task ID format")
         
         existing_task = await self.collection.find_one({"_id": obj_id})
-        if not existing_task or existing_task.get("status") == TaskStatus.Deleted:
+        
+        if str(existing_task.get("user_id")) != user_id:
+            raise HTTPException(status_code=403, detail="Unauthorized: Task does not belong to user")
+        
+        if not existing_task  or existing_task.get("status") == TaskStatus.Deleted:
             raise HTTPException(status_code=404, detail="Task not found")
         
         updated_data = task_update.dict()
@@ -38,13 +42,17 @@ class TaskCommandHandler:
         updated_task["user_id"] = str(updated_task["user_id"])
         return updated_task
 
-    async def delete_task(self, task_id: str) -> dict:
+    async def delete_task(self, task_id: str, user_id: str) -> dict:
         try:
             obj_id = ObjectId(task_id)
         except Exception:
             raise HTTPException(status_code=400, detail="Invalid task ID format")
         
         existing_task = await self.collection.find_one({"_id": obj_id})
+        
+        if str(existing_task.get("user_id")) != user_id:
+            raise HTTPException(status_code=403, detail="Unauthorized: Task does not belong to user")
+        
         if not existing_task or existing_task.get("status") == TaskStatus.Deleted:
             raise HTTPException(status_code=404, detail="Task not found")
         

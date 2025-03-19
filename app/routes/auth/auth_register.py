@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from datetime import timedelta
 from app.models.user_model import UserCreate
 from app.database import user_collection
-from app.auth_helpers import get_password_hash, create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, TokenData
+from app.auth_helpers import get_password_hash, create_access_token, TokenData
 
 router = APIRouter()
 
@@ -34,7 +34,7 @@ async def register(user_create: UserCreate):
         name=new_user.get("name", new_user["email"])
     )
 
-    token = create_access_token(data=token_data, expires_delta=timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES))
+    token = create_access_token(user_data=token_data)
 
     return {
         "id": new_user["id"],

@@ -13,7 +13,10 @@ async def get_tasks(query_handler = Depends(get_task_query_handler)):
     return tasks_list
 
 @router.get("/tasks/deleted", response_model=List[Task])
-async def get_deleted_tasks(query_handler = Depends(get_task_query_handler)):
+async def get_deleted_tasks(
+    request: Request,
+    query_handler = Depends(get_task_query_handler)
+):
     session = await get_session_from_request(request)
     user_email = session.get("user_email")
     user_doc = await db.users.find_one({"email": user_email})

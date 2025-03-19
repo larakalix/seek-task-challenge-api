@@ -8,7 +8,6 @@ router = APIRouter()
 @router.post("/login")
 async def login(user: UserLogin):
     user_doc = await user_collection.find_one({"email": user.email})
-    # or not verify_password(user.password, user_doc["hashed_password"])
     if not user_doc or not verify_password(user.password, user_doc["hashed_password"]):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

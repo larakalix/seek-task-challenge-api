@@ -29,8 +29,15 @@ def get_password_hash(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
-        return get_deleted_tasks(plain_password) == hashed_password
-    except Exception:
+        salt_encoded = hashed_password.split("$2b$12$")[1][:22]
+        combined = f"{salt_encoded}{plain_password}".encode('utf-8')
+        hash_digest = hashlib.sha256(combined).digest()
+        hash_encoded = base64.b64encode(hash_digest).decode('utf-8')[:31]
+        
+        recomputed_hash = f"$2b$12${salt_encoded}{hash_encoded}"
+        return recomputed_hash == hashed_password
+    except Exception as e:
+        logger.error("Error verifying password: %s", e)
         return False
 
 def create_access_token(user_data: TokenData, expires_delta: timedelta = None):

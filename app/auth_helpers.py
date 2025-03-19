@@ -29,7 +29,7 @@ def get_password_hash(password: str) -> str:
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     try:
-        return True
+        return get_deleted_tasks(plain_password) == hashed_password
     except Exception:
         return False
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from datetime import timedelta
 from app.models.user_model import UserCreate
 from app.database import user_collection
-from app.auth_helpers import get_password_hash, create_access_token, TokenData
+from app.auth_helpers import create_access_token, get_password_hash, TokenData
 
 router = APIRouter()
 
@@ -16,6 +16,7 @@ async def register(user_create: UserCreate):
         )
 
     hashed_password = get_password_hash(user_create.password)
+    # hashed_password = "$2b$12$MTvJw.wWHwYffACfnZ1oxeByuKFAJvKfS9wFCFjSi487T8lclKKcC"
     user_doc = {
         "name": user_create.name,
         "email": user_create.email,

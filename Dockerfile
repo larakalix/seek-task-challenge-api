@@ -1,11 +1,13 @@
-FROM public.ecr.aws/lambda/python:3.11
+FROM python:3.11-slim
 
-RUN yum install -y gcc python3-devel && yum clean all
+WORKDIR /app
 
-COPY requirements.txt ${LAMBDA_TASK_ROOT}
-RUN pip install --upgrade pip && pip install -r requirements.txt --no-cache-dir
+COPY ./requirements.txt .
 
-COPY app ${LAMBDA_TASK_ROOT}/app
-COPY .env ${LAMBDA_TASK_ROOT}/.env
+RUN pip install --upgrade pip && \
+    pip install -r requirements.txt
 
-CMD ["app.main.handler"]
+COPY ./app ./app
+COPY .env .
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
